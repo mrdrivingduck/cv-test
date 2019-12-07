@@ -1,11 +1,12 @@
 \documentclass{article}
+\usepackage{graphicx}
 % \usepackage[UTF8]{ctex}
 
 
 \begin{document}
 
     \title{Image Compression Using SVD Methods}
-    \author{SX1916115}
+    \author{SX1916115 Jingtang Zhang}
     \date{\today}
 
     \maketitle
@@ -123,14 +124,13 @@
         In order to recover $M$, only $k$ lines of $U$ and $V$ is needed,
         with $k$ elements of $\Sigma$.
         Thus, a total number of bytes to be
-        transferred is $$(1920 \times k + 1080 \times k + k) \times 8$$
-        The ratio of compression is $$\frac{1920 \times 1080}{(1920 + 1080 + 1) \times k} $$
+        transferred is: $$(1920 \times k + 1080 \times k + k) \times 8$$
+        The ratio of compression is: $$\frac{1920 \times 1080}{(1920 + 1080 + 1) \times k} $$
         \par
-        Moreover, since the value of some non-zero diagonal elements are not so important
+        Moreover, since the value of some small non-zero diagonal elements are not so important
         compared with others, they can be ignored by regarding them as 0.
-        Thus we get the most important $k'$ dimension,
-        which is smaller than k.
-        As a result, a larger compression ratio,
+        Thus we get the most important $k'$ dimension, which is smaller than k.
+        As a result, we get a larger compression ratio,
         at the cost of losing $k - k'$ dimension of data while recovering.
         Smaller the k’, more dimension will be lost.
         However, in most cases, a loss of unimportant dimension is acceptable,
@@ -138,10 +138,125 @@
     
 
     \section{Implementation}
+        \par
+        I used OpenCV, an open source framework for image processing, to complete the experiment.
+        Specifically, OpenCV provides out-of-the-box matrix implementation
+        and SVD algorithm implementation.
+        I wrote a small program on an Surface book 2 laptop with an Intel i7-8650U CPU and 16GB RAM.
+        The program read an image file into the memory as a matrix of $m \times n$,
+        and used built-in SVD function to decompose the matrix into three matrix:
+        \begin{itemize}
+            \item $U$($m \times m$)
+            \item $\Sigma$($m \times n$)
+            \item $V$($n \times n$)
+        \end{itemize}
+        The matrix $\Sigma$ contains all singular values in descending order,
+        while $U$ and $V$ contains orthogonal vectors corresponding to each singular value.
+        \par
+        Then, the program was given a compress ratio $r$,
+        and it would only reserve the $r$\% most important singular value in $\Sigma$,
+        and also, the corresponding vectors in $U$ and $V$ would be reserved.
+        \par
+        As for reconstructing the image,
+        I copied the reserved singular values into the orthogonal position of a zero-matrix $\Sigma'$.
+        By multiplying $U$, $\Sigma'$ and $V$, we can get a compressed image.
 
     \section{Evaluation}
+        \par
+        I did an experiment using a real-world image.
+        Specially, I showed the distribution of singular value after the compression,
+        and evaluated the bandwidth saved by compression.
+        Also, I used different values of $k'$ to see
+        how the ignorance of dimensions affects on what an image looks like.
+
+        \subsection{Distribution of Singular Value}
+            \par
+            I chose an image of $450 \times 800$,
+            and used the aforementioned algorithm to get its singular value.
+            \par
+            I noticed that the singular values range in at most four magnitudes.
+            The biggest singular value can be very big (50449.8),
+            while the smallest can be under ten (7.94395).
+            Intuitively, smaller singular values are not as important as bigger ones,
+            thus would not play an important role while reconstructing the image.
+            I simply ignored the smaller singular values according to the compress ratio $r$.
+
+        \subsection{Bandwidth Saved by Compression}
+            \par
+            For an image of $m \times n$,
+            the original pixels needed for transferring is: $$m \times n$$
+            Here I suppose $m > n$.
+            After compression, we have a orthogonal matrix $\Sigma$ of $m \times n$,
+            which can be reduced to $n \times 1$ because it is orthogonal.
+            Besides, we have two unitary matrices of $m \times m$ and $n \times n$, respectively,
+            while $m \times m$ can be reduced to $m \times n$ because of zeros in $\Sigma$.
+            Given the compress ratio $r$,
+            the total cost is:
+            $$(m \times n + n \times n \times n \times 1) \times r = n \times (m + n + 1) \times r$$
+            \par
+            When the $r$ is small enough, the bytes that should be sent can be saved greatly.
+            The problem is, how small $r$ should be to effectively save the bandwidth,
+            while maintaining what an image looks like originally by human eyes?
+
+        \subsection{Effect of different compress ratios}
+            \par
+            I used different compress ratios to see what the image looks like.
+            A ratio of 0.3 means only 30\%
+            the most important singular values (dimensions) are reserved.
+
+            \begin{figure}[!htbp]
+                \centering
+                \begin{minipage}[t]{0.45\linewidth}
+                    \centering
+                    \includegraphics[height=3.2cm]{imgs/original.png}
+                    \caption{Original Picture}
+                \end{minipage}
+                \hfill
+                \begin{minipage}[t]{0.45\linewidth}
+                    \centering
+                    \includegraphics[height=3.2cm]{imgs/compressed-0.5.png}
+                    \caption{50\% compress ratio}
+                \end{minipage}
+            \end{figure}
+            \begin{figure}[htbp]
+                \centering
+                \begin{minipage}[t]{0.45\linewidth}
+                    \centering
+                    \includegraphics[height=3.2cm]{imgs/compressed-0.3.png}
+                    \caption{30\% compress ratio}
+                \end{minipage}
+                \hfill
+                \begin{minipage}[t]{0.45\linewidth}
+                    \centering
+                    \includegraphics[height=3.2cm]{imgs/compressed-0.15.png}
+                    \caption{15\% compress ratio}
+                \end{minipage}
+            \end{figure}
+            \begin{figure}[htbp]
+                \centering
+                \begin{minipage}[t]{0.45\linewidth}
+                    \centering
+                    \includegraphics[height=3.2cm]{imgs/compressed-0.1.png}
+                    \caption{10\% compress ratio}
+                \end{minipage}
+                \hfill
+                \begin{minipage}[t]{0.45\linewidth}
+                    \centering
+                    \includegraphics[height=3.2cm]{imgs/compressed-0.05.png}
+                    \caption{5\% compress ratio}
+                \end{minipage}
+            \end{figure}
+
+            \par
+            It could be seen that: 30\% of the most important dimensions can reconstruct
+            the image which is as clear as the original one for human eyes.
+
 
     \section{Conclusion}
+        \par
+        SVD is a useful method for image compression.
+        It can save the bandwidth for the transfer of an image,
+        while maintaining what the image looks like by human eyes.
 
 
 \end{document}

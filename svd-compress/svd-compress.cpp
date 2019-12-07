@@ -4,13 +4,11 @@
 //
 // Author: mrdrivingduck @Nanjing
 //
-// Reference: https://www.cnblogs.com/didea/p/6044321.html
-// Config: https://blog.csdn.net/kiripeng/article/details/89099675
-//
 // ************************************************************************************
 
 #include <iostream>
 #include <string>
+#include <fstream>
 #include <sstream>
 #include <opencv2/opencv.hpp>
 
@@ -19,6 +17,7 @@ using std::cout;
 using std::endl;
 using std::string;
 using std::stringstream;
+using std::ofstream;
 
 //
 // For compressing
@@ -66,6 +65,13 @@ int main()
 	cv::Mat Vt;
 	cv::Mat W;
 	SVD_Compress(source, U, W, Vt);
+
+	ofstream fout("SingularValues");
+	fout << "singular values" << endl;
+	for (int i = 0; i < W.rows; i++) {
+		fout << W.at<float>(i, 0) << endl;
+	}
+	fout.close();
 
 	// ratios
 	double ratios[] = { 0.9, 0.5, 0.3, 0.2, 0.15, 0.1, 0.05, 0.02 };
