@@ -11,12 +11,14 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <opencv2/opencv.hpp>
 
 using namespace cv;
 using std::cout;
 using std::endl;
 using std::string;
+using std::stringstream;
 
 //
 // For compressing
@@ -52,14 +54,23 @@ int main()
 	// source image
 	cv::Mat source = imread(img, 0);
 	cv::Mat origin = imread(img, 0);
-	// result image
-	cv::Mat result;
+	
+	// ratios
+	double ratios[] = { 0.9, 0.5, 0.3, 0.2, 0.15, 0.1, 0.05, 0.02 };
 
 	// compressing
-	SVD_Compress(source, result, 0.1);
+	for (int i = 0; i < sizeof(ratios) / sizeof(ratios[0]); i++) {
+		cv::Mat sourceCopy(source);
+		cv::Mat result;
+		SVD_Compress(sourceCopy, result, ratios[i]);
+
+		stringstream ss;
+		ss << ratios[i];
+		cv::imshow("compressed " + ss.str(), result);
+		waitKey(0);
+	}
 
 	cv::imshow("origin", origin);
-	cv::imshow("compressed", result);
 	waitKey(0);
 }
 
