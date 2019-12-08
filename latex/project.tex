@@ -19,6 +19,7 @@
         and is wildly used in signal processing and statistics.
         In this project, I’d like to analyze an application of
         SVD in image compression in computer science aspect.
+        \par\textbf{Keywords: } Singular Value Decomposition; Image Compression
     \end{abstract}
 
     \section{Background}
@@ -158,7 +159,7 @@
         and also, the corresponding vectors in $U$ and $V$ would be reserved.
         \par
         As for reconstructing the image,
-        I copied the reserved singular values into the orthogonal position of a zero-matrix $\Sigma'$.
+        I copied the reserved singular values into the diagonal position of a zero-matrix $\Sigma'$.
         By multiplying $U$, $\Sigma'$ and $V$, we can get a compressed image.
 
     \section{Evaluation}
@@ -186,8 +187,8 @@
             For an image of $m \times n$,
             the original pixels needed for transferring is: $$m \times n$$
             Here I suppose $m > n$.
-            After compression, we have a orthogonal matrix $\Sigma$ of $m \times n$,
-            which can be reduced to $n \times 1$ because it is orthogonal.
+            After compression, we have a diagonal matrix $\Sigma$ of $m \times n$,
+            which can be reduced to $n \times 1$ because it is diagonal.
             Besides, we have two unitary matrices of $m \times m$ and $n \times n$, respectively,
             while $m \times m$ can be reduced to $m \times n$ because of zeros in $\Sigma$.
             Given the compress ratio $r$,
@@ -204,17 +205,17 @@
             A ratio of 0.3 means only 30\%
             the most important singular values (dimensions) are reserved.
 
-            \begin{figure}[!htbp]
+            \begin{figure}[htbp]
                 \centering
                 \begin{minipage}[t]{0.45\linewidth}
                     \centering
-                    \includegraphics[height=3.2cm]{imgs/original.png}
+                    \includegraphics[height=2.8cm]{imgs/original.png}
                     \caption{Original Picture}
                 \end{minipage}
                 \hfill
                 \begin{minipage}[t]{0.45\linewidth}
                     \centering
-                    \includegraphics[height=3.2cm]{imgs/compressed-0.5.png}
+                    \includegraphics[height=2.8cm]{imgs/compressed-0.5.png}
                     \caption{50\% compress ratio}
                 \end{minipage}
             \end{figure}
@@ -222,13 +223,13 @@
                 \centering
                 \begin{minipage}[t]{0.45\linewidth}
                     \centering
-                    \includegraphics[height=3.2cm]{imgs/compressed-0.3.png}
+                    \includegraphics[height=2.8cm]{imgs/compressed-0.3.png}
                     \caption{30\% compress ratio}
                 \end{minipage}
                 \hfill
                 \begin{minipage}[t]{0.45\linewidth}
                     \centering
-                    \includegraphics[height=3.2cm]{imgs/compressed-0.15.png}
+                    \includegraphics[height=2.8cm]{imgs/compressed-0.15.png}
                     \caption{15\% compress ratio}
                 \end{minipage}
             \end{figure}
@@ -236,13 +237,13 @@
                 \centering
                 \begin{minipage}[t]{0.45\linewidth}
                     \centering
-                    \includegraphics[height=3.2cm]{imgs/compressed-0.1.png}
+                    \includegraphics[height=2.8cm]{imgs/compressed-0.1.png}
                     \caption{10\% compress ratio}
                 \end{minipage}
                 \hfill
                 \begin{minipage}[t]{0.45\linewidth}
                     \centering
-                    \includegraphics[height=3.2cm]{imgs/compressed-0.05.png}
+                    \includegraphics[height=2.8cm]{imgs/compressed-0.05.png}
                     \caption{5\% compress ratio}
                 \end{minipage}
             \end{figure}
