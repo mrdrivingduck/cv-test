@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage{graphicx}
+\usepackage{hyperref}
 % \usepackage[UTF8]{ctex}
 
 
@@ -7,7 +8,7 @@
 
     \title{Image Compression Using SVD Methods}
     \author{SX1916115 Jingtang Zhang}
-    \date{\today}
+    \date{2019-12-09}
 
     \maketitle
 
@@ -142,7 +143,9 @@
         \par
         I used OpenCV, an open source framework for image processing, to complete the experiment.
         Specifically, OpenCV provides out-of-the-box matrix implementation
-        and SVD algorithm implementation.
+        and SVD algorithm implementation. The source code is available at my GitHub:
+            \url{https://github.com/mrdrivingduck/svd-image-compression}.
+        \par
         I wrote a small program on an Surface book 2 laptop with an Intel i7-8650U CPU and 16GB RAM.
         The program read an image file into the memory as a matrix of $m \times n$,
         and used built-in SVD function to decompose the matrix into three matrix:

@@ -1,6 +1,6 @@
-# cv-test (temp)
+# svd-image-compression
 
-cv-test (temp)
+📷 Image compression by Singular Value Decomposition.
 
 Created by : Mr Dk.
 
